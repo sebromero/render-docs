@@ -22,6 +22,7 @@
 {{/if}}
 
 {{detaileddescription}}
+<hr />
 
 {{/each}}
 {{/if}}

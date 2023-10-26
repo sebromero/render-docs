@@ -44,5 +44,6 @@
 {{briefdescription}}
 
 {{detaileddescription}}
+<hr />
 
 {{/each}}
