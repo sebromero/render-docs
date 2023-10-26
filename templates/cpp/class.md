@@ -1,7 +1,7 @@
 # {{kind}} `{{name}}` {{anchor refid}}
 
 {{#if basecompoundref}}
-```
+```{{language}}
 {{kind}} {{name}}
   {{#each basecompoundref}}
   : {{prot}} {{name}}
