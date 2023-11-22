@@ -12,8 +12,8 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/node_modules/moxygen/bin/moxygen.js",
-            "args": ["--html-anchors", "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api.md", "${workspaceFolder}/build/xml/"]
-            // "args": ["--html-anchors", "--classes" , "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api_%s.md", "${workspaceFolder}/build/xml/"]
+            // "args": ["--html-anchors", "--relative-paths", "--quiet", "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api.md", "${workspaceFolder}/build/xml/"]
+            "args": ["--html-anchors", "--relative-paths", "--quiet", "--access-level", "public", "--classes" , "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api_%s.md", "${workspaceFolder}/build/xml/"]
         }
     ]
 }
