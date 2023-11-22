@@ -18,7 +18,7 @@
  Members                        | Descriptions                                
 --------------------------------|---------------------------------------------
 {{#each filtered.compounds}}{{cell proto}}        | {{cell summary}}
-{{/each}}{{#each filtered.members}}{{cell proto}} | {{cell summary}}
+{{/each}}{{#each filtered.members}}| [`{{cell name}}`]({#ref {{refid}} #}) | {{cell summary}} |
 {{/each}}
 
 ## Members
@@ -32,7 +32,11 @@
 {{/each}}
 
 {{#each filtered.members}}
-### {{title proto}} {{anchor refid}}
+### `{{name}}` {{anchor refid}}
+
+```{{language}}
+{{stripmarkdown proto}}
+```
 
 {{#if enumvalue}}
  Values                         | Descriptions                                
