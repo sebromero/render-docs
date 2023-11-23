@@ -51,7 +51,7 @@ rm -rf $TARGET_FOLDER/*
 echo "📚 Converting documentation to Markdown..."
 
 # 🐛 Anchors are always generated even if --anchors is not specified
-npx moxygen --html-anchors --quiet --templates $TEMPLATES_FOLDER --classes --relative-paths --output ./build/md/api-%s.md $INPUT_FOLDER
-# npx moxygen --html-anchors --access-level public --quiet --templates $TEMPLATES_FOLDER --output $TARGET_FILE $INPUT_FOLDER
+# npx moxygen --html-anchors --quiet --templates $TEMPLATES_FOLDER --classes --relative-paths --output ./build/md/api-%s.md $INPUT_FOLDER
+npx moxygen --html-anchors --access-level public --quiet --templates $TEMPLATES_FOLDER --output $TARGET_FILE $INPUT_FOLDER
 
 # Example: ./render-docs.sh /Users/sebastianhunkeler/Repositories/arduino-libraries/Arduino_UnifiedStorage/src
