@@ -12,8 +12,19 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/node_modules/moxygen/bin/moxygen.js",
-            // "args": ["--html-anchors", "--relative-paths", "--quiet", "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api.md", "${workspaceFolder}/build/xml/"]
+            // "args": ["--html-anchors", "--relative-paths", "--quiet", "--access-level", "public", "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api.md", "${workspaceFolder}/build/xml/"]
             "args": ["--html-anchors", "--relative-paths", "--quiet", "--access-level", "public", "--classes" , "--templates", "${workspaceFolder}/templates/cpp", "--output", "${workspaceFolder}/build/md/api_%s.md", "${workspaceFolder}/build/xml/"]
+        },
+        // Another config for running the index.js directly with node
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch index.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js",
+            "args": ["/Users/sebastianhunkeler/Repositories/sebromero/Arduino_NiclaLamon/src", "${workspaceFolder}/build/md/api.md"]
         }
     ]
 }
