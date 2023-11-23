@@ -134,7 +134,9 @@ const doxyFileOptions = {
     EXTRACT_STATIC: "NO"
 }
 
+console.log("🔧 Creating Doxygen config file...")
 doxygen.createConfig(doxyFileOptions, DOXYGEN_FILE_PATH)
+console.log("🔨 Generating XML documentation...")
 doxygen.run(DOXYGEN_FILE_PATH)
 
 const moxygenOptions = {
@@ -146,6 +148,7 @@ const moxygenOptions = {
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
     accessLevel: ACCESS_LEVEL,
+    logfile: undefined
 };
 
 const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
@@ -156,8 +159,11 @@ const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
     relativePaths: moxygenOptions.relativePaths,
     templates: moxygenOptions.templates,
     accessLevel: moxygenOptions.accessLevel,
-    quiet: moxygenOptions.quiet
+    quiet: moxygenOptions.quiet,
+    logfile: moxygenOptions.logfile
 });
 
 moxygen.logger.init(finalMoxygenOptions);
+console.log("🔨 Generating markdown documentation...")
 moxygen.run(finalMoxygenOptions);
+console.log("✅ Done")
