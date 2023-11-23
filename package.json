@@ -1,6 +1,9 @@
 {
   "type": "module",
+  "name": "render-docs",
+  "version": "0.0.1",
   "dependencies": {
+    "commander": "^11.1.0",
     "doxygen": "^0.4.0",
     "moxygen": "file:../../../Repositories/sebromero/moxygen",
     "node-html-markdown": "^1.3.0"
