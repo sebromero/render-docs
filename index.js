@@ -11,6 +11,7 @@ const SOURCE_SHADOW_FOLDER = "./source"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
 const ACCESS_LEVEL = "public"
+const DEBUG = false
 
 const createDirectories = (dirs) => {
     for (const dir of dirs) {
@@ -131,7 +132,8 @@ const doxyFileOptions = {
     INCLUDE_FILE_PATTERNS: "*.h *.cpp",
     EXCLUDE_PATTERNS: "*/test/*",
     EXTRACT_PRIVATE: "NO",
-    EXTRACT_STATIC: "NO"
+    EXTRACT_STATIC: "NO",
+    QUIET: DEBUG ? "NO" : "YES",
 }
 
 console.log("🔧 Creating Doxygen config file...")
@@ -148,7 +150,7 @@ const moxygenOptions = {
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
     accessLevel: ACCESS_LEVEL,
-    logfile: undefined
+    logfile: DEBUG ? "moxygen.log" : undefined
 };
 
 const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
