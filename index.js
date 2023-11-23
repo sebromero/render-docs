@@ -36,7 +36,6 @@ const cleanDirectory = (dir) => {
     }
 }
 
-
 // Get version from package.json without using require
 const version = JSON.parse(fs.readFileSync('package.json')).version;
 
@@ -47,9 +46,8 @@ program
   .usage('[options] <sourc folder> <target folder>')
 
 program.argument('<source>', 'Source folder containing the .h files')
-program.argument('<target>', 'Target folder or file')
-program.option('-I, --include <string>', 'Regex for including files')
-program.option('-e, --exclude <string>', 'Regex for excluding files')
+program.argument('<target>', 'Target folder or file for the markdown documentation')
+program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
 program.option('-c, --include-cpp', 'Include .cpp files')
 program.parse(process.argv);
 
@@ -63,9 +61,9 @@ const outputFile = commandArguments[1]
 const commandOptions = program.opts()
 const includeCppFiles = commandOptions.includeCpp
 
-let fileExtensions = [".h"]
+let fileExtensions = ["*.h"]
 if (includeCppFiles) {
-    fileExtensions.push(".cpp")
+    fileExtensions.push("*.cpp")
 }
 
 cleanDirectory("./build")
@@ -88,8 +86,8 @@ const doxyFileOptions = {
     GENERATE_LATEX: "NO",
     GENERATE_XML: "YES",
     XML_OUTPUT: XML_FOLDER,
-    INCLUDE_FILE_PATTERNS: "*.h *.cpp",
-    EXCLUDE_PATTERNS: "*/test/*",
+    INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
+    EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
     EXTRACT_PRIVATE: "NO",
     EXTRACT_STATIC: "NO",
     QUIET: DEBUG ? "NO" : "YES",
@@ -102,6 +100,7 @@ doxygen.run(DOXYGEN_FILE_PATH)
 
 const moxygenOptions = {
     quiet: true,                /** Do not output anything to the console **/
+    anchors: false,             /** Don't generate markdown anchors for internal links **/
     htmlAnchors: true,          /** Generate HTML anchors for output **/
     directory: XML_FOLDER,            /** Location of the doxygen files **/
     output: outputFile,           /** Output file **/
@@ -115,6 +114,7 @@ const moxygenOptions = {
 const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
     directory: moxygenOptions.directory,
     output: moxygenOptions.output,
+    anchors: moxygenOptions.anchors,
     htmlAnchors: moxygenOptions.htmlAnchors,
     language: moxygenOptions.language,
     relativePaths: moxygenOptions.relativePaths,
