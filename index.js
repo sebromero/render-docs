@@ -2,12 +2,10 @@ import moxygen from "moxygen";
 import assign from "object-assign";
 import { program } from "commander";
 import fs from "fs";
-import path from "path";
 import doxygen from "doxygen";
 
 const TEMPLATES_FOLDER = "./templates/cpp"
 const XML_FOLDER = "./build/xml/"
-const SOURCE_SHADOW_FOLDER = "./source"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
 const ACCESS_LEVEL = "public"
@@ -38,42 +36,6 @@ const cleanDirectory = (dir) => {
     }
 }
 
-const findAllFiles = (dir, fileExtensions, include, exclude) => {
-    const files = fs.readdirSync(dir)
-    let result = []
-    files.forEach(file => {
-        const path = dir + "/" + file
-        const stat = fs.statSync(path)
-        if (stat && stat.isDirectory()) {
-            result = result.concat(findAllFilesRecursively(path, include, exclude))
-        } else {
-            // Get file extension including the dot
-            const fileExtension = file.substring(file.lastIndexOf(".")).toLowerCase()
-            
-            // Only consider files with the given extensions from the fileExtensions array
-            if (fileExtensions && !fileExtensions.includes(fileExtension)) {
-                return
-            }
-
-            if (include && !file.match(include)) {
-                return
-            }
-            if (exclude && file.match(exclude)) {
-                return
-            }
-            result.push(path)
-        }
-    })
-    return result
-}
-
-const symlinkFilesTo = (files, target, baseDirectory) => {
-    for (const file of files) {
-        // The target path should be the base directory + the file path relative to the base directory
-        const targetFile = target + "/" + path.relative(baseDirectory, file)
-        fs.symlinkSync(file, targetFile)
-    }
-}
 
 // Get version from package.json without using require
 const version = JSON.parse(fs.readFileSync('package.json')).version;
@@ -106,11 +68,8 @@ if (includeCppFiles) {
     fileExtensions.push(".cpp")
 }
 
-const files = findAllFiles(sourceFolder, fileExtensions , commandOptions.include, commandOptions.exclude)
-cleanDirectory(SOURCE_SHADOW_FOLDER)
 cleanDirectory("./build")
-createDirectories([SOURCE_SHADOW_FOLDER, "./build/md"])
-symlinkFilesTo(files, SOURCE_SHADOW_FOLDER, sourceFolder)
+createDirectories(["./build/md"])
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
     console.log("Doxygen is not installed. Downloading Doxygen...")
@@ -123,7 +82,7 @@ if(!doxygen.isDoxygenExecutableInstalled()) {
 
 // Create doxygen config file. XML output is required for moxygen
 const doxyFileOptions = {
-    INPUT: SOURCE_SHADOW_FOLDER,
+    INPUT: sourceFolder,
     RECURSIVE: "YES",
     GENERATE_HTML: "NO",
     GENERATE_LATEX: "NO",
