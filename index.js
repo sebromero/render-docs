@@ -19,8 +19,8 @@ const createDirectories = (dirs) => {
     }
 }
 
+// Deletes all files and subdirectories in the given directory
 const cleanDirectory = (dir) => {
-    // Deletes all files and subdirectories in the given directory
     if (fs.existsSync(dir)) {
         const files = fs.readdirSync(dir)
         for (const file of files) {
@@ -36,7 +36,6 @@ const cleanDirectory = (dir) => {
     }
 }
 
-// Get version from package.json without using require
 const version = JSON.parse(fs.readFileSync('package.json')).version;
 
 program
