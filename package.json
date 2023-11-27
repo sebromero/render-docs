@@ -2,6 +2,10 @@
   "type": "module",
   "name": "render-docs",
   "version": "0.0.1",
+  "description": "Render documentation for a C++ project as markdown",
+  "bin": {
+    "render-docs": "index.js"
+  },
   "dependencies": {
     "commander": "^11.1.0",
     "doxygen": "^0.4.0",

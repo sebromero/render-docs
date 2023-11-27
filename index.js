@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import moxygen from "moxygen";
 import assign from "object-assign";
 import { program } from "commander";
