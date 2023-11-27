@@ -9,7 +9,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from "path";
 
-const TEMPLATES_FOLDER = "./templates/cpp"
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const TEMPLATES_FOLDER = path.join(__dirname, "templates/cpp")
 const XML_FOLDER = "./build/xml/"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
@@ -50,8 +53,6 @@ const cleanDirectory = (dir) => {
 }
 
 // Extract the command version from the package.json file
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version;
 
 program
