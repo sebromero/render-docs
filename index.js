@@ -8,7 +8,7 @@ const TEMPLATES_FOLDER = "./templates/cpp"
 const XML_FOLDER = "./build/xml/"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
-const ACCESS_LEVEL = "public"
+const ACCESS_LEVEL = "public" // Don't document private and protected members
 const DEBUG = false
 
 const createDirectories = (dirs) => {
@@ -48,11 +48,12 @@ program.argument('<source>', 'Source folder containing the .h files')
 program.argument('<target>', 'Target folder or file for the markdown documentation')
 program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
 program.option('-c, --include-cpp', 'Include .cpp files')
-program.parse(process.argv);
+program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 
-if (!program.args.length) {
+if (process.argv.length < 3) {
     program.help();
 }
+program.parse(process.argv);
 
 const commandArguments = program.args
 const sourceFolder = commandArguments[0]
@@ -87,15 +88,28 @@ const doxyFileOptions = {
     XML_OUTPUT: XML_FOLDER,
     INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
     EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
-    EXTRACT_PRIVATE: "NO",
+    EXTRACT_PRIVATE: ACCESS_LEVEL === "private" ? "YES" : "NO",
     EXTRACT_STATIC: "NO",
     QUIET: DEBUG ? "NO" : "YES",
+    WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
+    WARN_AS_ERROR: "FAIL_ON_WARNINGS", // Treat warnings as errors. Continues if warnings are found.
 }
 
 console.log("🔧 Creating Doxygen config file...")
 doxygen.createConfig(doxyFileOptions, DOXYGEN_FILE_PATH)
 console.log("🔨 Generating XML documentation...")
-doxygen.run(DOXYGEN_FILE_PATH)
+
+try {
+    doxygen.run(DOXYGEN_FILE_PATH)
+} catch (error) {
+    const errorMessages = error.stderr.toString().split("\n")
+    
+    if(errorMessages.length > 0 && commandOptions.failOnWarnings) {
+        console.error("❌ Issues in the documentation were found.")
+        console.error(errorMessages.join("\n"))
+        process.exit(1)
+    }
+}
 
 const moxygenOptions = {
     quiet: true,                /** Do not output anything to the console **/
