@@ -11,6 +11,10 @@ const DOXYGEN_FILE_PATH = "./doxygen.config"
 const ACCESS_LEVEL = "public" // Don't document private and protected members
 const DEBUG = false
 
+/**
+ * Creates directories if they do not exist.
+ * @param {string[]} dirs - An array of directory paths.
+ */
 const createDirectories = (dirs) => {
     for (const dir of dirs) {
         if (!fs.existsSync(dir)) {
@@ -19,7 +23,11 @@ const createDirectories = (dirs) => {
     }
 }
 
-// Deletes all files and subdirectories in the given directory
+
+/**
+ * Cleans the specified directory by removing all files and subdirectories recursively.
+ * @param {string} dir - The directory path to be cleaned.
+ */
 const cleanDirectory = (dir) => {
     if (fs.existsSync(dir)) {
         const files = fs.readdirSync(dir)
@@ -36,6 +44,7 @@ const cleanDirectory = (dir) => {
     }
 }
 
+// Extract the command version from the package.json file
 const version = JSON.parse(fs.readFileSync('package.json')).version;
 
 program
@@ -47,7 +56,7 @@ program
 program.argument('<source>', 'Source folder containing the .h files')
 program.argument('<target>', 'Target folder or file for the markdown documentation')
 program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
-program.option('-c, --include-cpp', 'Include .cpp files')
+program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 
 if (process.argv.length < 3) {
@@ -78,13 +87,13 @@ if(!doxygen.isDoxygenExecutableInstalled()) {
     }
 }
 
-// Create doxygen config file. XML output is required for moxygen
+// The configuration options for Doxygen
 const doxyFileOptions = {
     INPUT: sourceFolder,
     RECURSIVE: "YES",
     GENERATE_HTML: "NO",
     GENERATE_LATEX: "NO",
-    GENERATE_XML: "YES",
+    GENERATE_XML: "YES", // XML output is required for moxygen
     XML_OUTPUT: XML_FOLDER,
     INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
     EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
@@ -111,6 +120,7 @@ try {
     }
 }
 
+// The configuration options for moxygen
 const moxygenOptions = {
     quiet: true,                /** Do not output anything to the console **/
     anchors: false,             /** Don't generate markdown anchors for internal links **/
@@ -124,6 +134,7 @@ const moxygenOptions = {
     logfile: DEBUG ? "moxygen.log" : undefined
 };
 
+// Apply default options where necessary
 const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
     directory: moxygenOptions.directory,
     output: moxygenOptions.output,
