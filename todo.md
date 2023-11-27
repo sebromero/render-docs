@@ -1,2 +1,0 @@
-- Look into creating separate class files
-- Fix bug that causes anchors to be always created even when --anchors option is not set
