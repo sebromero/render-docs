@@ -3,6 +3,9 @@ import assign from "object-assign";
 import { program } from "commander";
 import fs from "fs";
 import doxygen from "doxygen";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from "path";
 
 const TEMPLATES_FOLDER = "./templates/cpp"
 const XML_FOLDER = "./build/xml/"
@@ -45,7 +48,9 @@ const cleanDirectory = (dir) => {
 }
 
 // Extract the command version from the package.json file
-const version = JSON.parse(fs.readFileSync('package.json')).version;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version;
 
 program
   .name('render-docs')
