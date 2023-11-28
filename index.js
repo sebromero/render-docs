@@ -84,7 +84,7 @@ if (includeCppFiles) {
 }
 
 cleanDirectory("./build")
-createDirectories(["./build/md", "./build/xml"])
+createDirectories(["./build/md"])
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
     console.log(`Doxygen is not installed. Downloading ...`)
@@ -92,8 +92,6 @@ if(!doxygen.isDoxygenExecutableInstalled()) {
     if (!success) {
         console.error("Failed to download Doxygen")
         process.exit(1)
-    } else {
-        console.log(`Doxygen installed: ${doxygen.isDoxygenExecutableInstalled()}`)
     }
 }
 
@@ -121,6 +119,8 @@ try {
     console.log(`🔨 Generating XML documentation at ${XML_FOLDER} ...`)
     doxygen.run(DOXYGEN_FILE_PATH)
 } catch (error) {
+    console.error("❌ Failed to generate XML documentation.")
+    console.error(error)
     const errorMessages = error.stderr.toString().split("\n")
     
     if(errorMessages.length > 0 && commandOptions.failOnWarnings) {
