@@ -84,7 +84,7 @@ if (includeCppFiles) {
 }
 
 cleanDirectory("./build")
-createDirectories(["./build/md"])
+createDirectories(["./build/md", "./build/xml"])
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
     console.log(`Doxygen is not installed. Downloading ...`)
@@ -92,6 +92,8 @@ if(!doxygen.isDoxygenExecutableInstalled()) {
     if (!success) {
         console.error("Failed to download Doxygen")
         process.exit(1)
+    } else {
+        console.log(`Doxygen installed: ${doxygen.isDoxygenExecutableInstalled()}`)
     }
 }
 
