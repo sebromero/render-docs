@@ -127,7 +127,10 @@ try {
     const errorMessages = error.stderr.toString().split("\n")
     if(errorMessages.length > 0 && commandOptions.failOnWarnings) {
         console.error("❌ Issues in the documentation were found.")
-        console.error(errorMessages.join("\n"))
+        for (const message of errorMessages) {
+            if(message.length == 0) continue;
+            console.warn(`😬 ${message}`)
+        }
         process.exit(1)
     }
 }
