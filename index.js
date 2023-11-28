@@ -128,6 +128,18 @@ try {
     }
 }
 
+// List contents of the XML folder XML_FOLDER
+console.log(`🔍 Searching for XML files in ${path.resolve(XML_FOLDER)} ...`)
+const xmlFiles = fs.readdirSync(XML_FOLDER)
+if (xmlFiles.length === 0) {
+    console.error(`❌ No XML files found in ${XML_FOLDER}.`)
+    process.exit(1)
+} else {
+    // Print the XML files
+    console.log(`✅ Found ${xmlFiles.length} XML files:`)
+    console.log(xmlFiles.join("\n"))
+}
+
 // The configuration options for moxygen
 const moxygenOptions = {
     quiet: true,                /** Do not output anything to the console **/
