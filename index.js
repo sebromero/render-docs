@@ -8,7 +8,6 @@ import doxygen from "doxygen";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from "path";
-import { execSync } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,7 +16,6 @@ const TEMPLATES_FOLDER = path.join(__dirname, "templates/cpp")
 const XML_FOLDER = "./build/xml/"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
-const ACCESS_LEVEL = "public" // Don't document private and protected members
 
 /**
  * Creates directories if they do not exist.
@@ -30,7 +28,6 @@ const createDirectories = (dirs) => {
         }
     }
 }
-
 
 /**
  * Cleans the specified directory by removing all files and subdirectories recursively.
@@ -67,6 +64,7 @@ program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/t
 program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
+program.option('-a, --access-level <string>', 'Minimum access level to be considered (public, private)', "public")
 
 if (process.argv.length < 3) {
     program.help();
@@ -107,7 +105,7 @@ const doxyFileOptions = {
     CASE_SENSE_NAMES: "NO", // Creates case insensitive links compatible with GitHub
     INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
     EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
-    EXTRACT_PRIVATE: ACCESS_LEVEL === "private" ? "YES" : "NO",
+    EXTRACT_PRIVATE: commandOptions.accessLevel === "private" ? "YES" : "NO",
     EXTRACT_STATIC: "NO",
     QUIET: commandOptions.debug ? "NO" : "YES",
     WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
@@ -158,7 +156,7 @@ const moxygenOptions = {
     language: PROGRAMMING_LANGUAGE,            /** Programming language **/
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
-    accessLevel: ACCESS_LEVEL,
+    accessLevel: commandOptions.accessLevel,
     logfile: commandOptions.debug ? "moxygen.log" : undefined
 };
 
