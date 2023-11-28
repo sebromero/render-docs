@@ -24,7 +24,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/index.js",
-            "args": ["/Users/sebastianhunkeler/Repositories/sebromero/Arduino_NiclaLamon/src", "${workspaceFolder}/build/md/api.md"]
+            "args": ["/Users/sebastianhunkeler/Repositories/sebromero/Arduino_NiclaLamon/src", "${workspaceFolder}/build/md/api.md", "-f"]
         }
     ]
 }
