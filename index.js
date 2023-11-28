@@ -104,6 +104,7 @@ const doxyFileOptions = {
     GENERATE_LATEX: "NO",
     GENERATE_XML: "YES", // XML output is required for moxygen
     XML_OUTPUT: XML_FOLDER,
+    CASE_SENSE_NAMES: "NO", // Creates case insensitive links compatible with GitHub
     INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
     EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
     EXTRACT_PRIVATE: ACCESS_LEVEL === "private" ? "YES" : "NO",
@@ -140,23 +141,12 @@ const xmlFiles = fs.readdirSync(XML_FOLDER)
 if (xmlFiles.length === 0) {
     console.error(`❌ No XML files found in ${XML_FOLDER}.`)
     process.exit(1)
-} else {
+} else if(commandOptions.debug){
     console.log(`✅ Found ${xmlFiles.length} XML files.`)
     for (const file of xmlFiles) {
         console.log(`📄 ${file}`)
     }
 }
-
-// Print doxygen version by checking the node_modules/doxygen/dist/<version>/doxygen executable
-// Let's just list the files in the directory and take the first one
-const doxygenVersion = fs.readdirSync("./node_modules/doxygen/dist")[0]
-console.log(`📄 Doxygen version from path: ${doxygenVersion}`)
-// Print the version from the doxygen executable
-// append the version to the path
-const doxygenExecutable = `./node_modules/doxygen/dist/${doxygenVersion}/doxygen`
-const doxygenVersionOutput = execSync(`${doxygenExecutable} --version`).toString()
-console.log(`📄 Doxygen version from bin: ${doxygenVersionOutput}`)
-
 
 // The configuration options for moxygen
 const moxygenOptions = {
