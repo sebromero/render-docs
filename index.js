@@ -17,7 +17,6 @@ const XML_FOLDER = "./build/xml/"
 const PROGRAMMING_LANGUAGE = "cpp"
 const DOXYGEN_FILE_PATH = "./doxygen.config"
 const ACCESS_LEVEL = "public" // Don't document private and protected members
-const DEBUG = false
 
 /**
  * Creates directories if they do not exist.
@@ -66,6 +65,7 @@ program.argument('<target>', 'Target folder or file for the markdown documentati
 program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
 program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
+program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
 
 if (process.argv.length < 3) {
     program.help();
@@ -107,7 +107,7 @@ const doxyFileOptions = {
     EXCLUDE_PATTERNS: commandOptions.exclude ? commandOptions.exclude : "",
     EXTRACT_PRIVATE: ACCESS_LEVEL === "private" ? "YES" : "NO",
     EXTRACT_STATIC: "NO",
-    QUIET: DEBUG ? "NO" : "YES",
+    QUIET: commandOptions.debug ? "NO" : "YES",
     WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
     WARN_AS_ERROR: commandOptions.failOnWarnings ? "FAIL_ON_WARNINGS" : "NO", // Treat warnings as errors. Continues if warnings are found.
 }
@@ -119,10 +119,12 @@ try {
     console.log(`🔨 Generating XML documentation at ${XML_FOLDER} ...`)
     doxygen.run(DOXYGEN_FILE_PATH)
 } catch (error) {
-    console.error("❌ Failed to generate XML documentation.")
-    console.error(error)
-    const errorMessages = error.stderr.toString().split("\n")
+    if(commandOptions.debug) {
+        console.error("❌ Failed to generate XML documentation.")
+        console.error(error)
+    }
     
+    const errorMessages = error.stderr.toString().split("\n")
     if(errorMessages.length > 0 && commandOptions.failOnWarnings) {
         console.error("❌ Issues in the documentation were found.")
         console.error(errorMessages.join("\n"))
@@ -130,16 +132,10 @@ try {
     }
 }
 
-// List contents of the XML folder XML_FOLDER
-console.log(`🔍 Searching for XML files in ${path.resolve(XML_FOLDER)} ...`)
 const xmlFiles = fs.readdirSync(XML_FOLDER)
 if (xmlFiles.length === 0) {
     console.error(`❌ No XML files found in ${XML_FOLDER}.`)
     process.exit(1)
-} else {
-    // Print the XML files
-    console.log(`✅ Found ${xmlFiles.length} XML files:`)
-    console.log(xmlFiles.join("\n"))
 }
 
 // The configuration options for moxygen
@@ -153,7 +149,7 @@ const moxygenOptions = {
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
     accessLevel: ACCESS_LEVEL,
-    logfile: DEBUG ? "moxygen.log" : undefined
+    logfile: commandOptions.debug ? "moxygen.log" : undefined
 };
 
 // Apply default options where necessary
