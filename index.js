@@ -146,6 +146,17 @@ if (xmlFiles.length === 0) {
     }
 }
 
+// Print doxygen version by checking the node_modules/doxygen/dist/<version>/doxygen executable
+// Let's just list the files in the directory and take the first one
+const doxygenVersion = fs.readdirSync("./node_modules/doxygen/dist")[0]
+console.log(`📄 Doxygen version from path: ${doxygenVersion}`)
+// Print the version from the doxygen executable
+// append the version to the path
+const doxygenExecutable = `./node_modules/doxygen/dist/${doxygenVersion}/doxygen`
+const doxygenVersionOutput = await doxygen.runExecutable(doxygenExecutable, ["--version"])
+console.log(`📄 Doxygen version from bin: ${doxygenVersionOutput}`)
+
+
 // The configuration options for moxygen
 const moxygenOptions = {
     quiet: true,                /** Do not output anything to the console **/
