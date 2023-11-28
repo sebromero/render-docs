@@ -8,6 +8,7 @@ import doxygen from "doxygen";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from "path";
+import { execSync } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -153,7 +154,7 @@ console.log(`📄 Doxygen version from path: ${doxygenVersion}`)
 // Print the version from the doxygen executable
 // append the version to the path
 const doxygenExecutable = `./node_modules/doxygen/dist/${doxygenVersion}/doxygen`
-const doxygenVersionOutput = await doxygen.runExecutable(doxygenExecutable, ["--version"])
+const doxygenVersionOutput = execSync(`${doxygenExecutable} --version`).toString()
 console.log(`📄 Doxygen version from bin: ${doxygenVersionOutput}`)
 
 
