@@ -109,7 +109,7 @@ const doxyFileOptions = {
     EXTRACT_STATIC: "NO",
     QUIET: DEBUG ? "NO" : "YES",
     WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
-    WARN_AS_ERROR: "FAIL_ON_WARNINGS", // Treat warnings as errors. Continues if warnings are found.
+    WARN_AS_ERROR: commandOptions.failOnWarnings ? "FAIL_ON_WARNINGS" : "NO", // Treat warnings as errors. Continues if warnings are found.
 }
 
 console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
