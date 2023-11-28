@@ -139,6 +139,11 @@ const xmlFiles = fs.readdirSync(XML_FOLDER)
 if (xmlFiles.length === 0) {
     console.error(`❌ No XML files found in ${XML_FOLDER}.`)
     process.exit(1)
+} else {
+    console.log(`✅ Found ${xmlFiles.length} XML files.`)
+    for (const file of xmlFiles) {
+        console.log(`📄 ${file}`)
+    }
 }
 
 // The configuration options for moxygen
