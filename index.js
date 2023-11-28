@@ -87,7 +87,7 @@ cleanDirectory("./build")
 createDirectories(["./build/md"])
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
-    console.log("Doxygen is not installed. Downloading Doxygen...")
+    console.log(`Doxygen is not installed. Downloading ...`)
     const success = await doxygen.downloadVersion();
     if (!success) {
         console.error("Failed to download Doxygen")
@@ -112,11 +112,11 @@ const doxyFileOptions = {
     WARN_AS_ERROR: "FAIL_ON_WARNINGS", // Treat warnings as errors. Continues if warnings are found.
 }
 
-console.log("🔧 Creating Doxygen config file...")
+console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
 doxygen.createConfig(doxyFileOptions, DOXYGEN_FILE_PATH)
-console.log("🔨 Generating XML documentation...")
 
 try {
+    console.log(`🔨 Generating XML documentation at ${XML_FOLDER} ...`)
     doxygen.run(DOXYGEN_FILE_PATH)
 } catch (error) {
     const errorMessages = error.stderr.toString().split("\n")
