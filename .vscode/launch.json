@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch moxygen",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -19,12 +19,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch index.js",
+            "name": "Launch render-docs",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/index.js",
-            "args": ["/Users/sebastianhunkeler/Repositories/sebromero/Arduino_NiclaLamon/src", "${workspaceFolder}/build/md/api.md", "-f"]
+            "args": ["~/Repositories/sebromero/Arduino_NiclaLamon/src", "${workspaceFolder}/build/md/api.md", "-f"]
         }
     ]
 }
