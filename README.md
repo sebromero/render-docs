@@ -24,6 +24,11 @@ Options:
   -h, --help                   display help for command
 ```
 
+You can also specify single files as input so only those will be processed (e.g. `render-docs Folder.h ./api.md`)
+
+> **Note**
+> If you don't want to render any output but only want to check the documentation for completeness, you can omit the second argument and add the `-f` option (e.g. `render-docs Folder.h -f`).
+
 ### Options Explained
 
 - `--version` Prints the version of this command / package.

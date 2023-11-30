@@ -59,14 +59,14 @@ program
   .usage('[options] <sourc folder> <target folder>')
 
 program.argument('<source>', 'Source folder containing the .h files')
-program.argument('<target>', 'Target folder or file for the markdown documentation')
+program.argument('[target]', 'Target folder or file for the markdown documentation')
 program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
 program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
 program.option('-a, --access-level <string>', 'Minimum access level to be considered (public, private)', "public")
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
 
-if (process.argv.length < 3) {
+if (process.argv.length < 2) {
     program.help();
 }
 program.parse(process.argv);
@@ -76,14 +76,17 @@ const sourceFolder = commandArguments[0]
 const outputFile = commandArguments[1]
 const commandOptions = program.opts()
 const includeCppFiles = commandOptions.includeCpp
+const outputXML = outputFile !== undefined
 
 let fileExtensions = ["*.h"]
 if (includeCppFiles) {
     fileExtensions.push("*.cpp")
 }
 
-cleanDirectory("./build")
-createDirectories(["./build/md"])
+if(outputXML){
+    cleanDirectory("./build")
+    createDirectories(["./build/md"])
+}
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
     console.log(`Doxygen is not installed. Downloading ...`)
@@ -100,7 +103,7 @@ const doxyFileOptions = {
     RECURSIVE: "YES",
     GENERATE_HTML: "NO",
     GENERATE_LATEX: "NO",
-    GENERATE_XML: "YES", // XML output is required for moxygen
+    GENERATE_XML: outputXML ? "YES" : "NO", // XML output is required for moxygen
     XML_OUTPUT: XML_FOLDER,
     CASE_SENSE_NAMES: "NO", // Creates case insensitive links compatible with GitHub
     INCLUDE_FILE_PATTERNS: fileExtensions.join(" "),
@@ -112,37 +115,53 @@ const doxyFileOptions = {
     WARN_AS_ERROR: commandOptions.failOnWarnings ? "FAIL_ON_WARNINGS" : "NO", // Treat warnings as errors. Continues if warnings are found.
 }
 
-console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
+if(commandOptions.debug) console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
 doxygen.createConfig(doxyFileOptions, DOXYGEN_FILE_PATH)
 
 try {
-    console.log(`🔨 Generating XML documentation at ${XML_FOLDER} ...`)
+    if(commandOptions.debug) console.log("🏃 Running Doxygen ...")
+    if(doxyFileOptions.GENERATE_XML === "YES") {
+        console.log(`🔨 Generating XML documentation at ${XML_FOLDER} ...`)
+    }
     doxygen.run(DOXYGEN_FILE_PATH)
 } catch (error) {
-    if(commandOptions.debug) {
-        console.error("❌ Failed to generate XML documentation.")
-        console.error(error)
+    let errorMessages = error.stderr.toString().split("\n")
+
+    // Filter out empty messages and allow only warnings related to documentation issues
+    const filteredMessages = errorMessages.filter(message => {
+        const warningMessageRegex = /^(?:[^:\n]+):(?:\d+): warning: (?:.+)$/
+        return message.match(warningMessageRegex)
+    })
+
+    if(commandOptions.debug){
+        // Print messages that were not filtered out and are not empty
+        const remainingMessages = errorMessages.filter(message => {
+            return !filteredMessages.includes(message) && message !== ""
+        })
+        for (const message of remainingMessages) {
+            console.warn(`🤔 ${message}`)
+        }
     }
-    
-    const errorMessages = error.stderr.toString().split("\n")
-    if(errorMessages.length > 0 && commandOptions.failOnWarnings) {
+
+    if(filteredMessages.length > 0 && commandOptions.failOnWarnings) {
         console.error("❌ Issues in the documentation were found.")
-        for (const message of errorMessages) {
-            if(message.length == 0) continue;
+        for (const message of filteredMessages) {
             console.warn(`😬 ${message}`)
         }
         process.exit(1)
     }
 }
 
-const xmlFiles = fs.readdirSync(XML_FOLDER)
-if (xmlFiles.length === 0) {
-    console.error(`❌ No XML files found in ${XML_FOLDER}.`)
-    process.exit(1)
-} else if(commandOptions.debug){
-    console.log(`✅ Found ${xmlFiles.length} XML files.`)
-    for (const file of xmlFiles) {
-        console.log(`📄 ${file}`)
+if(outputXML){
+    const xmlFiles = fs.readdirSync(XML_FOLDER)
+    if (xmlFiles.length === 0) {
+        console.error(`❌ No XML files found in ${XML_FOLDER}.`)
+        process.exit(1)
+    } else if(commandOptions.debug){
+        console.log(`✅ Found ${xmlFiles.length} XML files.`)
+        for (const file of xmlFiles) {
+            console.log(`📄 ${file}`)
+        }
     }
 }
 
@@ -174,7 +193,10 @@ const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
     logfile: moxygenOptions.logfile
 });
 
-moxygen.logger.init(finalMoxygenOptions);
-console.log("🔨 Generating markdown documentation...")
-moxygen.run(finalMoxygenOptions);
+if(outputXML){
+    moxygen.logger.init(finalMoxygenOptions);
+    console.log("🔨 Generating markdown documentation...")
+    moxygen.run(finalMoxygenOptions);
+}
+
 console.log("✅ Done")
