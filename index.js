@@ -61,7 +61,7 @@ try {
         "fileExtensions": fileExtensions,
         "exclude": commandOptions.exclude,
         "accessLevel": commandOptions.accessLevel,
-        "failOnWarnings": commandOptions.failOnWarnings,
+        "failOnWarnings": commandOptions.failOnWarnings || commandOptions.resolveIssues,
         "debug": commandOptions.debug
     }
     const doxygenRunner = new DoxygenRunner(options)
@@ -70,17 +70,22 @@ try {
 } catch (error) {
     const validationMessages = error.messages
 
-    if(validationMessages && commandOptions.failOnWarnings) {
-        console.error("❌ Issues in the documentation were found.")
-        if(commandOptions.resolveIssues){
-            console.log("🔨 Resolving issues ...")
-            const resolver = new IssueResolver(validationMessages, "<key>")
-            await resolver.resolve()
-        }
+    if(validationMessages) {
+        
         for (const message of validationMessages) {
             console.warn(`😬 ${message}`)
         }
-        process.exit(1)
+        
+        if(commandOptions.failOnWarnings){
+            console.error("❌ Issues in the documentation were found. Exiting.")
+            process.exit(1)
+        }
+    }
+
+    if(validationMessages && commandOptions.resolveIssues){
+        console.log("🔨 Resolving issues ...")
+        const resolver = new IssueResolver(validationMessages, "<key>")
+        await resolver.resolve()
     }
 }
 
