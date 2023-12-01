@@ -24,7 +24,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/index.js",
-            "args": ["${userHome}/Repositories/sebromero/Arduino_NiclaLamon/src", "-f"]
+            "args": ["${userHome}/Repositories/arduino-libraries/Arduino_UnifiedStorage/src/UFile.h", "-f", "-r"]
         }
     ]
 }
