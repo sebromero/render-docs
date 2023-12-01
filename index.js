@@ -125,7 +125,8 @@ try {
     }
     doxygen.run(DOXYGEN_FILE_PATH)
 } catch (error) {
-    let errorMessages = error.stderr.toString().split("\n")
+    // Replace all "\n  " with " " to meld the error messages into one line        
+    let errorMessages = error.stderr.toString().replace(/\n  /g, " ").split("\n")
 
     // Filter out empty messages and allow only warnings related to documentation issues
     const filteredMessages = errorMessages.filter(message => {
