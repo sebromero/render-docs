@@ -85,7 +85,13 @@ if (includeCppFiles) {
 
 if(outputXML){
     cleanDirectory("./build")
-    createDirectories(["./build/md"])
+    createDirectories(["./build"])
+}
+
+// Check if output path exists. If not, create it.
+if(outputFile){
+    const outputFolder = path.dirname(outputFile)
+    createDirectories([outputFolder])
 }
 
 if(!doxygen.isDoxygenExecutableInstalled()) {
