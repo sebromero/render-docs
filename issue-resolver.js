@@ -7,6 +7,8 @@ const MODEL_NAME = "gpt-4"
 
 class IssueResolver {
     constructor(messages, apiKey = process.env["OPENAI_API_KEY"]) {
+        if(!apiKey) throw new Error("No OpenAI API key provided")
+        
         this.openai = new OpenAI({
             apiKey: apiKey
         });
