@@ -1,4 +1,5 @@
 import fs from "fs"
+import path from "path"
 
 /**
  * Creates directories if they do not exist.
@@ -32,4 +33,17 @@ const cleanDirectory = (dir) => {
     }
 }
 
-export { createDirectories, cleanDirectory }
+// Find the corresponding implementation file for a header file
+const findImplementationFile = (file) => {
+    const filename = path.parse(file).name
+    const extension = path.extname(file)
+    if(extension !== ".h") return null
+
+    const folder = path.dirname(file)
+    const implementationFile = path.join(folder, `${filename}.cpp`)
+    
+    if(!fs.existsSync(implementationFile)) return null
+    return implementationFile    
+}
+
+export { createDirectories, cleanDirectory, findImplementationFile }
