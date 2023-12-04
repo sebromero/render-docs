@@ -3,6 +3,8 @@ import path from "path"
 import OpenAI from 'openai'
 import { findImplementationFile } from "./helpers.js"
 
+const MODEL_NAME = "gpt-4"
+
 class IssueResolver {
     constructor(messages, apiKey = process.env["OPENAI_API_KEY"]) {
         this.openai = new OpenAI({
@@ -47,10 +49,11 @@ class IssueResolver {
         try {
             const chatCompletion = await this.openai.chat.completions.create({
                 messages: [{ role: 'user', content: prompt }],
-                model: 'gpt-4',
+                model: MODEL_NAME,
             });
             const response = chatCompletion.choices[0].message.content
             // Remove anything that comes before the first code block denoted by ``` if there is one
+            // ChatGPT sometimes adds extra text before the code block
             const codeBlockIndex = response.indexOf("```")
             const result = codeBlockIndex > 0 ? response.substring(codeBlockIndex) : response
             // Strip ```cpp from the beginning and end
