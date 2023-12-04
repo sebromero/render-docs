@@ -61,7 +61,6 @@ const doxygenOptions = {
     "fileExtensions": fileExtensions,
     "exclude": commandOptions.exclude,
     "accessLevel": commandOptions.accessLevel,
-    "failOnWarnings": commandOptions.failOnWarnings || commandOptions.resolveIssues,
     "debug": commandOptions.debug
 }
 

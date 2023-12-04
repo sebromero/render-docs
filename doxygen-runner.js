@@ -50,7 +50,7 @@ class DoxygenRunner {
             EXTRACT_STATIC: "NO",
             QUIET: this.options.debug ? "NO" : "YES",
             WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
-            WARN_AS_ERROR: this.options.failOnWarnings ? "FAIL_ON_WARNINGS" : "NO", // Treat warnings as errors. Continues if warnings are found.
+            WARN_AS_ERROR: "FAIL_ON_WARNINGS" // Treat warnings as errors. Continues if warnings are found.
         }
 
         if(this.options.debug) console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
