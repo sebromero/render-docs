@@ -15,19 +15,24 @@ Arguments:
   target                       Target folder or file for the markdown documentation
 
 Options:
-  -V, --version                output the version number
-  -e, --exclude <string>       Pattern for excluding files (e.g. "*/test/*")
-  -c, --include-cpp            Process .cpp files when rendering the documentation.
-  -a, --access-level <string>  Minimum access level to be considered (public, private) (default: "public")
-  -f, --fail-on-warnings       Fail when undocumented code is found (default: false)
-  -d, --debug                  Enable debugging mode with additional output. (default: false)
-  -h, --help                   display help for command
+  -V, --version                   output the version number
+  -e, --exclude <string>          Pattern for excluding files (e.g. "*/test/*")
+  -c, --include-cpp               Process .cpp files when rendering the documentation.
+  -a, --access-level <string>     Minimum access level to be considered (public, private) (default: "public")
+  -f, --fail-on-warnings          Fail when issues in the documentation are found (default: false)
+  -d, --debug                     Enable debugging mode with additional output. (default: false)
+  -r, --resolve-issues [api-key]  Automatically fix issues in the documentation. (default: false)
+  -h, --help                      display help for command
 ```
 
 You can also specify single files as input so only those will be processed (e.g. `render-docs Folder.h ./api.md`)
 
 > [!TIP]
 > If you don't want to render any output but only want to check the documentation for completeness, you can omit the second argument and add the `-f` option (e.g. `render-docs Folder.h -f`).
+
+> [!TIP]
+> You can leverate OpenAI to help resolving issues in your documentation (e.g. undocumented functions). To do so, you can omit the second argument and add the `-r` option (e.g. `render-docs Folder.h -r`).
+For this to work you will have to create an [OpenAI API key](https://platform.openai.com/api-keys) and provide it to this tool. You can do that either by adding it to the `-r` option (e.g. `-r fklj343-sdfjl-34`) or pass it as environment variable `OPENAI_API_KEY` (e.g. `OPENAI_API_KEY=fklj343-sdfjl-34 render-docs UFile.h -r`).
 
 ### Options Explained
 
