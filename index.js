@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import moxygen from "moxygen";
-import assign from "object-assign";
 import { program } from "commander";
 import fs from "fs";
 import DoxygenRunner from "./doxygen-runner.js";
@@ -109,19 +108,6 @@ const moxygenOptions = {
     logfile: commandOptions.debug ? MOXYGEN_LOGFILE : undefined
 };
 
-// Apply default options where necessary
-const finalMoxygenOptions = assign({}, moxygen.defaultOptions, {
-    directory: moxygenOptions.directory,
-    output: moxygenOptions.output,
-    anchors: moxygenOptions.anchors,
-    htmlAnchors: moxygenOptions.htmlAnchors,
-    language: moxygenOptions.language,
-    relativePaths: moxygenOptions.relativePaths,
-    templates: moxygenOptions.templates,
-    accessLevel: moxygenOptions.accessLevel,
-    quiet: moxygenOptions.quiet,
-    logfile: moxygenOptions.logfile
-});
 
 if(outputXML){
     // Check if output path exists. If not, create it.
@@ -129,8 +115,10 @@ if(outputXML){
         const outputFolder = path.dirname(outputFile)
         if(commandOptions.debug) console.log(`🔧 Creating output directory ${outputFolder} ...`)
         createDirectories([outputFolder])
-    }
-    
+}
+
+    // Apply default options where necessary
+    let finalMoxygenOptions = Object.assign({}, moxygen.defaultOptions, moxygenOptions);
     moxygen.logger.init(finalMoxygenOptions);
     console.log("🔨 Generating markdown documentation...")
     moxygen.run(finalMoxygenOptions);
