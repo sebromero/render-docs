@@ -6,7 +6,7 @@ import { findImplementationFile } from "./helpers.js"
 const MODEL_NAME = "gpt-4"
 
 class IssueResolver {
-    constructor(messages, apiKey = process.env["OPENAI_API_KEY"]) {
+    constructor(messages, apiKey) {
         if(!apiKey) throw new Error("No OpenAI API key provided")
         
         this.openai = new OpenAI({

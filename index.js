@@ -14,6 +14,7 @@ import { createDirectories } from "./helpers.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const OPENAI_API_KEY_ENV_VAR = "OPENAI_API_KEY"
 const TEMPLATES_FOLDER = path.join(__dirname, "templates/cpp")
 const PROGRAMMING_LANGUAGE = "cpp"
 const XML_FOLDER = "./build/xml/"
@@ -74,7 +75,8 @@ if(validationMessages.length > 0 && commandOptions.resolveIssues){
     }
 
     console.log("🔨 Trying to resolve issues ...")
-    const resolver = new IssueResolver(validationMessages, "<key>")
+    const apiKey = typeof commandOptions.resolveIssues === "string" ? commandOptions.resolveIssues : process.env[OPENAI_API_KEY_ENV_VAR]
+    const resolver = new IssueResolver(validationMessages, apiKey)
     await resolver.resolve()
     validationMessages = await doxygenRunner.run()
     if(validationMessages.length > 0){
