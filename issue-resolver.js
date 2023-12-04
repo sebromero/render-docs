@@ -28,7 +28,6 @@ class IssueResolver {
     }
 
     constructPrompt(file, messages){
-        console.log(`📄 Constructing prompt for file ${file}`)
         const fileContents = fs.readFileSync(file).toString()
         const implementationFile = findImplementationFile(file)
         let implementationFileContents
@@ -49,6 +48,7 @@ class IssueResolver {
         const messages = this.messages[file]
         const prompt = this.constructPrompt(file, messages)
         try {
+            console.log(`🤖 Asking AI to resolve issues in file ${file}. This may take a while...`)
             const chatCompletion = await this.openai.chat.completions.create({
                 messages: [{ role: 'user', content: prompt }],
                 model: MODEL_NAME,
@@ -61,7 +61,7 @@ class IssueResolver {
             // Strip ```cpp from the beginning and end
             return result.replace("```cpp\n", "").replace("```", "")
         } catch (error) {
-            console.error(`❌ Error resolving issues. ${error.message}`)
+            console.error(`❌ Error resolving issues in file ${file}. ${error.message}`)
             return null
         }
     }
