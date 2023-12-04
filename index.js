@@ -17,6 +17,7 @@ const __dirname = dirname(__filename);
 const TEMPLATES_FOLDER = path.join(__dirname, "templates/cpp")
 const PROGRAMMING_LANGUAGE = "cpp"
 const XML_FOLDER = "./build/xml/"
+const MOXYGEN_LOGFILE = "./moxygen.log"
 
 // Extract the command version from the package.json file
 const version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version;
@@ -104,7 +105,7 @@ const moxygenOptions = {
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
     accessLevel: commandOptions.accessLevel,
-    logfile: commandOptions.debug ? "moxygen.log" : undefined
+    logfile: commandOptions.debug ? MOXYGEN_LOGFILE : undefined
 };
 
 // Apply default options where necessary
