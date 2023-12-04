@@ -1,5 +1,6 @@
 import doxygen from "doxygen";
 import { createDirectories, cleanDirectory } from "./helpers.js";
+import fs from "fs";
 
 const DOXYGEN_FILE_PATH = "./doxygen.config"
 
