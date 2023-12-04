@@ -34,7 +34,7 @@ program.option('-c, --include-cpp', 'Process .cpp files when rendering the docum
 program.option('-a, --access-level <string>', 'Minimum access level to be considered (public, private)', "public")
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
-program.option('-r, --resolve-issues', 'Automatically fix issues in the documentation', false)
+program.option('-r, --resolve-issues [api-key]', 'Automatically fix issues in the documentation', false)
 
 if (process.argv.length < 2) {
     program.help();
@@ -53,39 +53,43 @@ if (includeCppFiles) {
     fileExtensions.push("*.cpp")
 }
 
-try {    
-    const options = {
-        "outputXML": outputXML,
-        "xmlFolder": XML_FOLDER,
-        "sourceFolder": sourceFolder,
-        "fileExtensions": fileExtensions,
-        "exclude": commandOptions.exclude,
-        "accessLevel": commandOptions.accessLevel,
-        "failOnWarnings": commandOptions.failOnWarnings || commandOptions.resolveIssues,
-        "debug": commandOptions.debug
-    }
-    const doxygenRunner = new DoxygenRunner(options)
-    await doxygenRunner.run()
+const doxygenOptions = {
+    "outputXML": outputXML,
+    "xmlFolder": XML_FOLDER,
+    "sourceFolder": sourceFolder,
+    "fileExtensions": fileExtensions,
+    "exclude": commandOptions.exclude,
+    "accessLevel": commandOptions.accessLevel,
+    "failOnWarnings": commandOptions.failOnWarnings || commandOptions.resolveIssues,
+    "debug": commandOptions.debug
+}
 
-} catch (error) {
-    const validationMessages = error.messages
+const doxygenRunner = new DoxygenRunner(doxygenOptions)
+let validationMessages = await doxygenRunner.run()
 
-    if(validationMessages) {
-        
-        for (const message of validationMessages) {
-            console.warn(`😬 ${message}`)
-        }
-        
-        if(commandOptions.failOnWarnings){
-            console.error("❌ Issues in the documentation were found. Exiting.")
-            process.exit(1)
-        }
+if(validationMessages.length > 0 && commandOptions.resolveIssues){
+    console.log("👀 Issues in the documentation were found:")
+    for (const message of validationMessages) {
+        console.warn(`😬 ${message}`)
     }
 
-    if(validationMessages && commandOptions.resolveIssues){
-        console.log("🔨 Resolving issues ...")
-        const resolver = new IssueResolver(validationMessages, "<key>")
-        await resolver.resolve()
+    console.log("🔨 Trying to resolve issues ...")
+    const resolver = new IssueResolver(validationMessages, "<key>")
+    await resolver.resolve()
+    validationMessages = await doxygenRunner.run()
+    if(validationMessages.length > 0){
+        console.warn("🙈 Remaining issues in the documentation were found. Please check the output.")
+    }
+}
+
+if(validationMessages.length > 0){
+    for (const message of validationMessages) {
+        console.warn(`😬 ${message}`)
+    }
+
+    if(commandOptions.failOnWarnings){
+        console.error("❌ Issues in the documentation were found. Exiting.")
+        process.exit(1)
     }
 }
 

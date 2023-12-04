@@ -3,14 +3,6 @@ import { createDirectories, cleanDirectory } from "./helpers.js";
 
 const DOXYGEN_FILE_PATH = "./doxygen.config"
 
-class ValidationError extends Error {
-    constructor() {
-        super("A validation error occurred.");
-        this.name = "ValidationError";
-        this.messages = null;
-    }
-}
-
 class DoxygenRunner {
 
     constructor(options){
@@ -71,7 +63,7 @@ class DoxygenRunner {
         }
     }
 
-    createValidationError(error){
+    extractValidationMessages(error){
         // Replace all "\n  " with " " to meld the error messages into one line        
         let errorMessages = error.stderr.toString().replace(/\n  /g, " ").split("\n")
 
@@ -91,23 +83,25 @@ class DoxygenRunner {
             }
         }
 
-        const validationError = new ValidationError()
-        validationError.messages = filteredMessages
-        return validationError
+        return filteredMessages
     }
 
     async run(){
+        let validationMessages = []
+
         await this.checkInstallation()
         this.prepare()
         try {
             doxygen.run(DOXYGEN_FILE_PATH)
         } catch (error) {
-            throw this.createValidationError(error)
+            validationMessages = this.extractValidationMessages(error)
         }
 
-        if(outputXML){
+        if(this.options.outputXML){
             this.checkXMLOutput()
         }
+
+        return validationMessages
     }
 }
 
