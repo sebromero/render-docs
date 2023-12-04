@@ -26,18 +26,18 @@ program
   .name('render-docs')
   .description('CLI tool to generate markdown documentation from C++ code using Doxygen')
   .version(version)
-  .usage('[options] <sourc folder> <target folder>')
+  .usage('<sourc folder> [target folder] [options]')
 
 program.argument('<source>', 'Source folder containing the .h files')
 program.argument('[target]', 'Target folder or file for the markdown documentation')
-program.option('-e, --exclude <string>', 'Pattern for excluding files (e.g. "*/test/*")')
+program.option('-e, --exclude <pattern>', 'Pattern for excluding files (e.g. "*/test/*")')
 program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
-program.option('-a, --access-level <string>', 'Minimum access level to be considered (public, private)', "public")
+program.option('-a, --access-level <level>', 'Minimum access level to be considered (public, private)', "public")
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
 program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
 program.option('-r, --resolve-issues [api-key]', 'Automatically fix issues in the documentation', false)
 
-if (process.argv.length < 2) {
+if (process.argv.length < 3) {
     program.help();
 }
 program.parse(process.argv);
