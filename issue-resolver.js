@@ -3,7 +3,7 @@ import path from "path"
 import OpenAI from 'openai'
 import { findImplementationFile } from "./helpers.js"
 
-const MODEL_NAME = "gpt-4"
+const MODEL_NAME = "gpt-3.5-turbo"
 
 class IssueResolver {
     constructor(messages, apiKey) {
