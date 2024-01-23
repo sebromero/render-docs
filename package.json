@@ -6,6 +6,11 @@
   "bin": {
     "render-docs": "index.js"
   },
+  "author": {
+    "name": "Sebastian Romero",
+    "email": "s.romero@arduino.cc",
+    "url": "https://github.com/sebromero"
+  },
   "dependencies": {
     "commander": "^11.1.0",
     "doxygen": "^0.4.0",
