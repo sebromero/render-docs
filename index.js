@@ -31,11 +31,12 @@ program
 program.argument('<source>', 'Source folder containing the .h files')
 program.argument('[target]', 'Target folder or file for the markdown documentation')
 program.option('-e, --exclude <pattern>', 'Pattern for excluding files (e.g. "*/test/*")')
-program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation.')
+program.option('-c, --include-cpp', 'Process .cpp files when rendering the documentation')
 program.option('-a, --access-level <level>', 'Minimum access level to be considered (public, private)', "public")
+program.option('-s, --show-access-modifiers', 'Show access modifiers in documentation', false)
 program.option('-f, --fail-on-warnings', 'Fail when undocumented code is found', false)
-program.option('-d, --debug', 'Enable debugging mode with additional output.', false)
-program.option('-r, --resolve-issues [api-key]', 'Automatically fix issues in the documentation', false)
+program.option('-d, --debug', 'Enable debugging mode with additional output', false)
+program.option('-r, --resolve-issues [api-key]', 'Automatically fix issues in the documentation with OpenAI', false)
 
 if (process.argv.length < 3) {
     program.help();
@@ -105,15 +106,16 @@ const moxygenOptions = {
     templates: TEMPLATES_FOLDER,     /** Templates directory **/
     relativePaths: true,
     accessLevel: commandOptions.accessLevel,
+    showAccessModifiers: commandOptions.showAccessModifiers,
     logfile: commandOptions.debug ? MOXYGEN_LOGFILE : undefined
 };
 
 
 if(outputXML){
-    // Check if output path exists. If not, create it.
     if(outputFile){
         const outputFolder = path.dirname(outputFile)
         if(commandOptions.debug) console.log(`🔧 Creating output directory ${outputFolder} ...`)
+        // Check if output path exists. If not, create it.
         createDirectories([outputFolder])
 }
 
