@@ -35,7 +35,7 @@
 ### `{{name}}` {{anchor refid}}
 
 ```{{language}}
-{{stripmarkdown proto}}
+{{adjust-access-modifiers (stripmarkdown proto) }}
 ```
 
 {{#if enumvalue}}
