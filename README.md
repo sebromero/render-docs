@@ -19,6 +19,7 @@ Options:
   -e, --exclude <string>          Pattern for excluding files (e.g. "*/test/*")
   -c, --include-cpp               Process .cpp files when rendering the documentation.
   -a, --access-level <string>     Minimum access level to be considered (public, private) (default: "public")
+  -s, --show-access-modifiers     how access modifiers in documentation
   -f, --fail-on-warnings          Fail when issues in the documentation are found (default: false)
   -d, --debug                     Enable debugging mode with additional output. (default: false)
   -r, --resolve-issues [api-key]  Automatically fix issues in the documentation. (default: false)
@@ -40,6 +41,8 @@ For this to work you will have to create an [OpenAI API key](https://platform.op
 - `--exclude` Use this when certain files or folder inside the source folder should not be processed (e.g. `-e */test/* */node_modules/*`).
 - `--include-cpp` It's good practice to do the class and function declarations in the .h file and thus also add the documentation there. However, if you happen to have code documentation also in .cpp files enabling this option will process those files too.
 - `--access-level` Allows to specify which class members to filter out in the documentation. If you specify `private` all members will show up in the documentation. If you set it to `protected` only the private members will be filtered out. When set to `public` only public members will be processed.
+- `--show-access-modifiers` Includes the access modifier in function documentation. e.g. `public int getTemperature()` when set, vs. `int getTemperature()` when not set.
+
 - `--fail-on-warnings` The command will print out missing code documentation and issues in existing documentation. This allows to achieve 100% documentation coverage.
 - `--debug` Enable this option to get additional output from the tool. This allows to debug in case you get unexpected output from the command.
 - `--help` Displays usage information.
