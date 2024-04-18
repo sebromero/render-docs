@@ -2,8 +2,6 @@ import doxygen from "doxygen";
 import { createDirectories, cleanDirectory } from "./helpers.js";
 import fs from "fs";
 
-const DOXYGEN_FILE_PATH = "./doxygen.config"
-
 class DoxygenRunner {
 
     constructor(options){
@@ -54,8 +52,8 @@ class DoxygenRunner {
             ENABLE_PREPROCESSING: "NO" // Do not preprocess the source files in order to see #ifdef blocks. Alternatively use PREDEFINED.
         }
 
-        if(this.options.debug) console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
-        doxygen.createConfig(doxyFileOptions, DOXYGEN_FILE_PATH)
+        if(this.options.debug) console.log(`🔧 Creating Doxygen config file ${this.options.doxygenConfigFile} ...`)
+        doxygen.createConfig(doxyFileOptions, this.options.doxygenConfigFile)
 
         if(this.options.debug) console.log("🏃 Running Doxygen ...")
         if(doxyFileOptions.GENERATE_XML === "YES") {
@@ -94,7 +92,7 @@ class DoxygenRunner {
         await this.checkInstallation()
         this.prepare()
         try {
-            doxygen.run(DOXYGEN_FILE_PATH)
+            doxygen.run(this.options.doxygenConfigFile)
         } catch (error) {
             validationMessages = this.extractValidationMessages(error)
         }

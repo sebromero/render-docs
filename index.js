@@ -19,6 +19,7 @@ const PROGRAMMING_LANGUAGE = "cpp"
 const BUILD_FOLDER = "./doxygen-build/"
 const XML_FOLDER = path.join(BUILD_FOLDER, "xml")
 const MOXYGEN_LOGFILE = "./moxygen.log"
+const DOXYGEN_CONFIG_FILE = "./doxygen.config"
 
 // Extract the command version from the package.json file
 const version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version;
@@ -59,6 +60,7 @@ if (includeCppFiles) {
 const doxygenOptions = {
     "outputXML": outputXML,
     "xmlFolder": XML_FOLDER,
+    "doxygenConfigFile": DOXYGEN_CONFIG_FILE,
     "sourceFolder": sourceFolder,
     "fileExtensions": fileExtensions,
     "exclude": commandOptions.exclude,
