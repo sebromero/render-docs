@@ -9,6 +9,7 @@ import { dirname } from 'path';
 import path from "path";
 import IssueResolver from "./issue-resolver.js";
 import { createDirectories } from "./helpers.js";
+import process from "process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -127,6 +128,16 @@ if(outputXML){
     moxygen.logger.init(finalMoxygenOptions);
     console.log("🔨 Generating markdown documentation...")
     moxygen.run(finalMoxygenOptions);
+}
+
+if(!commandOptions.debug){
+    // Since moxygen uses async file operations, we can only clean up 
+    // the build folder when the process exits.
+    process.on('exit', () => {
+        // Clean up the build folder unless in debug mode
+        fs.rmSync(DOXYGEN_CONFIG_FILE, { force: true })
+        fs.rmSync(BUILD_FOLDER, { recursive: true })
+    })
 }
 
 if(validationMessages.length > 0){
