@@ -118,7 +118,7 @@ if(outputXML){
         if(commandOptions.debug) console.log(`🔧 Creating output directory ${outputFolder} ...`)
         // Check if output path exists. If not, create it.
         createDirectories([outputFolder])
-}
+    }
 
     // Apply default options where necessary
     let finalMoxygenOptions = Object.assign({}, moxygen.defaultOptions, moxygenOptions);
