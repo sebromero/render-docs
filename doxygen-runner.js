@@ -44,14 +44,14 @@ class DoxygenRunner {
             GENERATE_XML: this.options.outputXML ? "YES" : "NO", // XML output is required for moxygen
             XML_OUTPUT: this.options.xmlFolder,
             CASE_SENSE_NAMES: "NO", // Creates case insensitive links compatible with GitHub
-            INCLUDE_FILE_PATTERNS: this.options.fileExtensions.join(" "),
+            FILE_PATTERNS: this.options.fileExtensions.join(" "), // Include only specified file extensions
             EXCLUDE_PATTERNS: this.options.exclude ? this.options.exclude : "",
             EXTRACT_PRIVATE: this.options.accessLevel === "private" ? "YES" : "NO",
             EXTRACT_STATIC: "NO",
             QUIET: this.options.debug ? "NO" : "YES",
             WARN_NO_PARAMDOC: "YES", // Warn if a parameter is not documented
             WARN_AS_ERROR: "FAIL_ON_WARNINGS", // Treat warnings as errors. Continues if warnings are found.
-            ENABLE_PREPROCESSING: "NO" // Do not preprocess the source files in order to see #ifdef blocks. Alternatively use DOXYGEN macro in the source code.
+            ENABLE_PREPROCESSING: "NO" // Do not preprocess the source files in order to see #ifdef blocks. Alternatively use PREDEFINED.
         }
 
         if(this.options.debug) console.log(`🔧 Creating Doxygen config file ${DOXYGEN_FILE_PATH} ...`)
