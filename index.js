@@ -16,7 +16,8 @@ const __dirname = dirname(__filename);
 const OPENAI_API_KEY_ENV_VAR = "OPENAI_API_KEY"
 const TEMPLATES_FOLDER = path.join(__dirname, "templates/cpp")
 const PROGRAMMING_LANGUAGE = "cpp"
-const XML_FOLDER = "./build/xml/"
+const BUILD_FOLDER = "./doxygen-build/"
+const XML_FOLDER = path.join(BUILD_FOLDER, "xml")
 const MOXYGEN_LOGFILE = "./moxygen.log"
 
 // Extract the command version from the package.json file
