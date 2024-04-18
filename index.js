@@ -72,7 +72,7 @@ let validationMessages = await doxygenRunner.run()
 if(validationMessages.length > 0 && commandOptions.resolveIssues){
     console.log("👀 Issues in the documentation were found:")
     for (const message of validationMessages) {
-        console.warn(`😬 ${message}`)
+        console.warn(`🤔 ${message}`)
     }
 
     console.log("🔨 Trying to resolve issues ...")
@@ -87,7 +87,7 @@ if(validationMessages.length > 0 && commandOptions.resolveIssues){
 
 if(validationMessages.length > 0){
     for (const message of validationMessages) {
-        console.warn(`😬 ${message}`)
+        console.warn(`🤔 ${message}`)
     }
 
     if(commandOptions.failOnWarnings){
@@ -127,4 +127,7 @@ if(outputXML){
     moxygen.run(finalMoxygenOptions);
 }
 
+if(validationMessages.length > 0){
+    console.warn(`😬 ${validationMessages.length} issues were found in the documentation. Please check the output.`)
+}
 console.log("✅ Done")
