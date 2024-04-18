@@ -20,7 +20,7 @@ const PROGRAMMING_LANGUAGE = "cpp"
 const BUILD_FOLDER = "./doxygen-build/"
 const XML_FOLDER = path.join(BUILD_FOLDER, "xml")
 const MOXYGEN_LOGFILE = "./moxygen.log"
-const DOXYGEN_CONFIG_FILE = "./doxygen.config"
+const DOXYGEN_CONFIG_FILE = path.join(BUILD_FOLDER, "doxygen.config")
 
 // Extract the command version from the package.json file
 const version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version;
@@ -135,7 +135,6 @@ if(!commandOptions.debug){
     // the build folder when the process exits.
     process.on('exit', () => {
         // Clean up the build folder unless in debug mode
-        fs.rmSync(DOXYGEN_CONFIG_FILE, { force: true })
         fs.rmSync(BUILD_FOLDER, { recursive: true })
     })
 }
