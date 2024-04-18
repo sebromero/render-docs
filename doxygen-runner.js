@@ -59,8 +59,8 @@ class DoxygenRunner {
 
         if(this.options.debug) console.log("🏃 Running Doxygen ...")
         if(doxyFileOptions.GENERATE_XML === "YES") {
-            cleanDirectory("./build")
-            createDirectories(["./build"])
+            cleanDirectory(this.options.xmlFolder)
+            createDirectories([this.options.xmlFolder])
             console.log(`🔨 Generating XML documentation at ${this.options.xmlFolder} ...`)
         }
     }
